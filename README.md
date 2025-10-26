@@ -17,3 +17,12 @@ A lightweight and easy-to-use port scanner for scanning open TCP ports on a targ
 - **Extensible:** Easily add new features or scan types as needed.
 
 ---
+## Disclaimer
+
+This tool is intended for educational and authorized testing purposes only. **Always obtain proper authorization before scanning any network or host you do not own.**
+
+---
+
+## License
+
+[MIT License](LICENSE)
