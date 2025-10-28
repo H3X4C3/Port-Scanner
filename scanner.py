@@ -5,7 +5,7 @@ from src import utils
 
 try:
     for port in range(1, 1024):
-        result = utils.scan_ports('localhost', port)
+        result = utils.scan_ip('localhost', port)
 
         if result:
             print(f"Port {port} is open")
