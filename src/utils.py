@@ -50,3 +50,31 @@ def is_valid_hostname(hostname):
     except (socket.gaierror, socket.error) as e:
         print(f"Invalid hostname: {e}")
         return False
+
+
+def resolve_hostname(hostname):
+    """Resolve a hostname to an IP address"""
+
+    try:
+        ip_address = socket.gethostbyname(hostname)
+        return ip_address
+    except (socket.gaierror, socket.error) as e:
+        print(f"Error: {e}")
+        return False
+
+
+def parse_ports(ports):
+    """Parse the ports from args"""
+
+    # Check if it is multiple ports, single port, or range
+    if "," in ports:  # If it is comma-separated ports
+        port_list = int(ports.split(','))
+    elif '-' in ports:  # If it is a range of ports
+        port_split = int(ports.split('-'))
+
+        for p in range(port_split[0], port_split[1]):
+            port_list.append(p)
+    else:
+        return False  # If input is invalid return False
+
+    return port_list
