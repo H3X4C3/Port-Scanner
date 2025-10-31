@@ -39,4 +39,31 @@ def main():
     else:
         sys.exit(1)
 
-    # Parse ports
+    # Parse ports if specified
+    if args.port:
+        try:
+            port_list = utils.parse_ports(args.port)
+        except Exception as e:
+            print(f"Invalid port specification: {e}")
+            sys.exit(1)
+    else:
+        # if no ports are specified, default to the top 1000 ports
+        port_list = list(range(1, 1001))
+
+    # Set timeout if specified
+    if args.timeout:
+        timeout = args.timeout
+    else:
+        timeout = 1
+
+    # Scanning operations
+    try:
+        for p in port_list:
+            result = utils.scan_ip(ip_address, p, timeout)
+            if result == True:
+                print(f"Port {p} is open")
+            else:
+                print(f"Port {p} is closed")
+    except KeyboardInterrupt as e:
+        print("\nScan interrupted by user")
+        sys.exit(0)
