@@ -17,6 +17,22 @@ def scan_ip(ip_address, port, timeout):
         return False
 
 
+def banner_scan(ip_address, port, timeout):
+    """Scans for open port(s) and grabs the services running on the port(s)"""
+
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(timeout)
+            s.connect((ip_address, port))
+            banner = s.recv(1024).decode().strip()  # this isn't working
+            return True, banner
+    except (Exception, socket.error) as e:
+        return False, None
+    except socket.timeout as e:
+        print(f"Socket timeout: {e}")
+        return False, None
+
+
 def is_valid_ip(ip_address):
     """Checks if IP is valid"""
     try:
@@ -79,10 +95,21 @@ def parse_ports(ports):
 def format_results(results):
     """Formats and prints scan results in a tabular format"""
 
+    has_banner = len(results) > 0 and len(
+        results[0]) == 3  # Check if banners are included
+
     print("\n")
-    print(f"{'Port':<10} {'Status':<10}")
-    print("-" * 20)
-    for port, is_open in results:
-        status = "Open" if is_open else "Closed"
-        print(f"{port:<10} {status:<10}")
+    if has_banner:
+        print(f"{'Port':<12} {'Status':<12} {'Banner'}")
+        print("-" * 40)
+        for port, is_open, banner in results:
+            status = "Open" if is_open else "Closed"
+            banner_str = banner if banner else "N/A"
+            print(f"{port:<12} {status:<12} {banner_str}")
+    else:
+        print(f"{'Port':<12} {'Status':<12}")
+        print("-" * 26)
+        for port, is_open in results:
+            status = "Open" if is_open else "Closed"
+            print(f"{port:<12} {status:<12}")
     print("\n")

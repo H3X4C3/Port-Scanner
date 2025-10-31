@@ -9,17 +9,20 @@ def parse_args():
         description="Port Scanner")  # create parser object
 
     # Required Arguments
-    parser.add_argument("target", help="Target IP address or hostname")
+    parser.add_argument("target", help="Target IP address or hostname.")
 
     # Optional arguments
     parser.add_argument(
-        "-p", "--port", help="Port(s) to scan (e.g. 80,223,1024,100-200)"
+        "-p", "--port", help="Port(s) to scan (e.g. 80,223,1024,100-200)."
     )
     parser.add_argument(
-        "-t", "--timeout", type=int, help="Timeout per port in seconds"
+        "-t", "--timeout", type=int, help="Timeout per port in seconds."
     )
     parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Enable verbose/debug output"
+        "-v", "--verbose", action="store_true", help="Enable verbose/debug output."
+    )
+    parser.add_argument(
+        "-b", "--banner", action="store_true", help="Grab banner of the port being scanned. Displays the services running on a port."
     )
 
     return parser.parse_args()
@@ -62,10 +65,14 @@ def main():
         for p in port_list:
             if args.verbose:
                 print(f"Scanning port {p}...")
-            # Scan the target and store True/False
-            is_open = utils.scan_ip(ip_address, p, timeout)
-            # Append the port number and status of the port (True = open, False = closed)
-            results.append((p, is_open))
+            if not args.banner:
+                # Scan the target without banner grabbing and store True/False
+                is_open = utils.scan_ip(ip_address, p, timeout)
+                # Append the port number and status of the port (True = open, False = closed)
+                results.append((p, is_open))
+            else:
+                is_open, banner = utils.banner_scan(ip_address, p, timeout)
+                results.append((p, is_open, banner))
     except KeyboardInterrupt as e:
         print("\nScan interrupted by user")
         sys.exit(0)
