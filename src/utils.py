@@ -2,20 +2,6 @@ import socket
 import ipaddress
 
 
-# def scan_ip(ip_address, port):
-#     """Scans for open ports on a target IP address and returns true/false"""
-
-#     try:
-#         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-#             s.connect((ip_address, port))
-#             return True
-#     except (Exception, socket.error) as e:
-#         return False
-#     except socket.timeout as e:
-#         print(f"Socket timeout: {e}")
-#         return False
-
-
 def scan_ip(ip_address, port, timeout):
     """Scans for open port(s) within the timeout given"""
 
@@ -88,3 +74,15 @@ def parse_ports(ports):
         raise ValueError(f"Error parsing ports '{ports}': {e}") from e
 
     return port_list
+
+
+def format_results(results):
+    """Formats and prints scan results in a tabular format"""
+
+    print("\n")
+    print(f"{'Port':<10} {'Status':<10}")
+    print("-" * 20)
+    for port, is_open in results:
+        status = "Open" if is_open else "Closed"
+        print(f"{port:<10} {status:<10}")
+    print("\n")

@@ -57,13 +57,20 @@ def main():
         timeout = 1
 
     # Scanning operations
+    results = []  # Initialize list to store all the scanned ports
     try:
         for p in port_list:
-            result = utils.scan_ip(ip_address, p, timeout)
-            if result == True:
-                print(f"Port {p} is open")
-            else:
-                print(f"Port {p} is closed")
+            if args.verbose:
+                print(f"Scanning port {p}...")
+            # Scan the target and store True/False
+            is_open = utils.scan_ip(ip_address, p, timeout)
+            # Append the port number and status of the port (True = open, False = closed)
+            results.append((p, is_open))
     except KeyboardInterrupt as e:
         print("\nScan interrupted by user")
         sys.exit(0)
+
+    # Format the results and print
+    utils.format_results(results)
+    if args.verbose:
+        print("Scan complete")
