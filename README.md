@@ -78,7 +78,7 @@ Options
 
 ## Notes, limitations and tips
 
-- This is a connect-based scanner. It is reliable but not stealthy.
+- This is a connect-based scanner. It is not stealthy.
 - Scanning lots of ports sequentially can be slow. Consider adding threading or asyncio to speed up large scans.
 - Banner parsing is minimal and may not always identify services correctly.
 - The output file option is available from the CLI; review the code if you need a specific format or behavior.
