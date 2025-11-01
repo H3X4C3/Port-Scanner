@@ -25,7 +25,7 @@ def parse_args():
         "-b", "--banner", action="store_true", help="Grab banner of the port being scanned. Displays the services running on a port."
     )
     parser.add_argument(
-        "-o", "--output", help="Output results to txt or json file."
+        "-o", "--output", help="Output results to txt file."
     )
 
     return parser.parse_args()
