@@ -20,27 +20,30 @@ def scan_ip(ip_address, port, timeout):
 def banner_scan(ip_address, port, timeout):
     """Scans for open port(s) and grabs the services running on the port(s)"""
 
-    banner = banner_http(ip_address, port, timeout)
-    if banner:
-        return True, banner
-    banner = banner_ftp(ip_address, port, timeout)
-    if banner:
-        return True, banner
-    banner = banner_ssh(ip_address, port, timeout)
-    if banner:
-        return True, banner
+    # Try protocol-specific helpers; they return (is_open, banner)
+    for helper in (banner_ftp, banner_http, banner_ssh):
+        try:
+            is_open, banner = helper(ip_address, port, timeout)
+        except Exception:
+            is_open, banner = False, None
+
+        if is_open:
+            return True, banner
 
     # Generic fallback
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.settimeout(timeout)
             s.connect((ip_address, port))
-            s.send(b'\r\n')
-            data = s.recv(1024)
-            if data:
-                banner = data.decode(errors='ignore').strip()
-                return True, banner
-            return True, None
+            try:
+                s.send(b'\r\n')
+                data = s.recv(1024)
+                if data:
+                    banner = data.decode(errors='ignore').strip()
+                    return True, banner
+                return True, None  # connected but no banner
+            except socket.timeout:
+                return True, None
     except (socket.error, socket.timeout):
         return False, None
 
