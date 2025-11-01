@@ -20,16 +20,90 @@ def scan_ip(ip_address, port, timeout):
 def banner_scan(ip_address, port, timeout):
     """Scans for open port(s) and grabs the services running on the port(s)"""
 
+    banner = banner_http(ip_address, port, timeout)
+    if banner:
+        return True, banner
+    banner = banner_ftp(ip_address, port, timeout)
+    if banner:
+        return True, banner
+    banner = banner_ssh(ip_address, port, timeout)
+    if banner:
+        return True, banner
+
+    # Generic fallback
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.settimeout(timeout)
             s.connect((ip_address, port))
-            banner = s.recv(1024).decode().strip()  # this isn't working
-            return True, banner
-    except (Exception, socket.error) as e:
+            s.send(b'\r\n')
+            data = s.recv(1024)
+            if data:
+                banner = data.decode(errors='ignore').strip()
+                return True, banner
+            return True, None
+    except (socket.error, socket.timeout):
         return False, None
-    except socket.timeout as e:
-        print(f"Socket timeout: {e}")
+
+
+def banner_http(ip_address, port, timeout):
+    """Grab banner for HTTP/HTTPS ports"""
+
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(timeout)
+            s.connect((ip_address, port))
+            # Set the HTTP request
+            request = b"GET / HTTP/1.1\r\nHost: " + ip_address.encode() + b"\r\n\r\n"
+            s.send(request)
+            response = s.recv(1024)
+
+            if response:
+                banner = response.decode(errors='ignore').strip()
+                # Store the HTTP response and split it by line
+                lines = banner.split("\n")
+                # return status line
+                return True, lines[0] if lines else banner
+            return True, None
+    except (socket.error, socket.timeout):
+        return False, None
+
+
+def banner_ssh(ip_address, port, timeout):
+    """Grab banner for SSH ports"""
+
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(timeout)
+            s.connect((ip_address, port))
+            data = s.recv(1024)
+            if data:
+                banner = data.decode(errors='ignore').strip()
+                return True, banner
+            return True, None
+    except (socket.error, socket.timeout):
+        return False, None
+
+
+def banner_ftp(ip_address, port, timeout):
+    """Grab banner for FTP ports"""
+
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(timeout)
+            s.connect((ip_address, port))
+            # Try to immediately get response
+            data = s.recv(1024)
+            if data:
+                banner = data.decode(errors='ignore').strip()
+                return True, banner
+            # If no immediate response
+            s.send(b"USER anonymous\r\n")
+            data = s.recv(1024)
+            if data:
+                banner = data.decode(errors='ignore').strip()
+                return True, banner
+            return True, None
+    except (socket.error, socket.timeout):
         return False, None
 
 
