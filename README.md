@@ -23,20 +23,21 @@ No third-party packages required.
 ## Quick start
 
 1. Clone the repo:
-   git clone https://github.com/H3X4C3/Port-Scanner.git
+   `git clone https://github.com/H3X4C3/Port-Scanner.git`
 
 2. Change into the project folder:
-   cd Port-Scanner
+   `cd Port-Scanner`
 
 3. Run the scanner:
-   python scanner.py <target> [options]
+   `python scanner.py <target> [options]`
 
 ---
 
 ## Usage
 
-python scanner.py <target> [-p PORTS] [-t TIMEOUT] [-b] [-v] [-o OUTPUT]
+`python scanner.py <target> [-p PORTS] [-t TIMEOUT] [-b] [-v] [-o OUTPUT]`
 
+```
 Arguments
 - target — hostname or IP address to scan
 
@@ -50,19 +51,20 @@ Options
 - -b, --banner — enable banner grabbing; results include banner text when available
 - -v, --verbose — show progress messages while scanning
 - -o, --output — write results to a file (supports .txt)
+```
 
 ---
 
 ## Examples
 
 - Scan the default top 1000 ports:
-  python scanner.py 192.168.1.10
+  `python scanner.py 192.168.1.10`
 
 - Scan ports 22, 80 and 443:
-  python scanner.py example.com -p 22,80,443
+  `python scanner.py example.com -p 22,80,443`
 
 - Scan a range with banners and longer timeout:
-  python scanner.py 10.0.0.5 -p 1-1024 -b -t 2 -v
+  `python scanner.py 10.0.0.5 -p 1-1024 -b -t 2 -v`
 
 ---
 
