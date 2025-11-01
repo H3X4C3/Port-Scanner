@@ -103,7 +103,3 @@ Suggestions, bug reports, and pull requests are welcome. Ideas:
 ## License
 
 [MIT License](LICENSE)
-
----
-
-Author: H3X4C3
