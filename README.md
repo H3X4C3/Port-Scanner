@@ -50,7 +50,7 @@ Options
 - -t, --timeout — timeout in seconds per port (default 1)
 - -b, --banner — enable banner grabbing; results include banner text when available
 - -v, --verbose — show progress messages while scanning
-- -o, --output — write results to a file (supports .txt)
+- "-o", "--output", nargs='?', const="results.txt", type=str, help="Output results to txt file (default: results.txt)."
 ```
 
 ---
