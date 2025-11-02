@@ -172,21 +172,22 @@ def parse_ports(ports):
 def format_results(results):
     """Formats and prints scan results in a tabular format"""
 
+    output = "\n"
     has_banner = len(results) > 0 and len(
         results[0]) == 3  # Check if banners are included
 
-    print("\n")
     if has_banner:
-        print(f"{'Port':<12} {'Status':<12} {'Banner'}")
-        print("-" * 40)
+        output += f"{'Port':<12} {'Status':<12} {'Banner'}\n"
+        output += "-" * 40 + "\n"
         for port, is_open, banner in results:
             status = "Open" if is_open else "Closed"
             banner_str = banner if banner else "N/A"
-            print(f"{port:<12} {status:<12} {banner_str}")
+            output += f"{port:<12} {status:<12} {banner_str}\n"
     else:
-        print(f"{'Port':<12} {'Status':<12}")
-        print("-" * 26)
+        output += f"{'Port':<12} {'Status':<12}\n"
+        output += "-" * 26 + "\n"
         for port, is_open in results:
             status = "Open" if is_open else "Closed"
-            print(f"{port:<12} {status:<12}")
-    print("\n")
+            output += f"{port:<12} {status:<12}\n"
+    output += "\n"
+    return output

@@ -25,7 +25,7 @@ def parse_args():
         "-b", "--banner", action="store_true", help="Grab banner of the port being scanned. Displays the services running on a port."
     )
     parser.add_argument(
-        "-o", "--output", help="Output results to txt file."
+        "-o", "--output", nargs='?', const="results.txt", type=str, help="Output results to txt file (default: results.txt)."
     )
 
     return parser.parse_args()
@@ -80,7 +80,20 @@ def main():
         print("\nScan interrupted by user")
         sys.exit(0)
 
-    # Format the results and print
-    utils.format_results(results)
+    # If output arg is given, send to file
+    if args.output:
+        output_path = args.output
+        try:
+            with open(output_path, 'w') as f:
+                f.write(utils.format_results(results))
+            print(f"\nSuccessfully printed output to {output_path}")
+            sys.exit(0)
+        except IOError as e:
+            print(f"\nError writing to {output_path}: {e}")
+            sys.exit(0)
+    else:
+        # Otherwise, format the results and print
+        utils.format_results(results)
+
     if args.verbose:
-        print("Scan complete")
+        print("\nScan complete")
