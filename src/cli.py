@@ -93,7 +93,7 @@ def main():
             sys.exit(0)
     else:
         # Otherwise, format the results and print
-        utils.format_results(results)
+        print(utils.format_results(results))
 
     if args.verbose:
         print("\nScan complete")
