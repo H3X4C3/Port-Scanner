@@ -91,15 +91,6 @@ Do not scan systems without explicit permission. Unauthorized scanning may be il
 
 ---
 
-## Contributing
-
-Suggestions, bug reports, and pull requests are welcome. Ideas:
-- Add concurrency for faster scans
-- Add UDP scanning
-- Improve banner parsing and output formats
-
----
-
 ## License
 
 [MIT License](LICENSE)
